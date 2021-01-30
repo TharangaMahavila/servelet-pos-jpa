@@ -52,6 +52,7 @@ public class CustomerServlet extends HttpServlet {
             CustomerBO customerBO = BOFactory.getInstance().getBO(BOTypes.CUSTOMER);
             customerBO.setEntityManager(em);
             customerBO.deleteCustomer(id);
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }finally {
@@ -82,6 +83,7 @@ public class CustomerServlet extends HttpServlet {
             CustomerBO customerBO = BOFactory.getInstance().getBO(BOTypes.CUSTOMER);
             customerBO.setEntityManager(em);
             customerBO.updateCustomer(dto);
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
         }catch (JsonbException exp){
             throw new HttpResponseException(400, "Failed to read the JSON", exp);

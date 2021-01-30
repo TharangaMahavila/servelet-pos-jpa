@@ -11,6 +11,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,7 +38,8 @@ public class OrderServlet extends HttpServlet {
         Jsonb jsonb = JsonbBuilder.create();
         final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
 
-        try (Connection connection = cp.getConnection()) {
+        EntityManager em = emf.createEntityManager();
+        try{
             OrderDTO dto = jsonb.fromJson(req.getReader(), OrderDTO.class);
 
             if (dto.getOrderId() == null || dto.getOrderId().trim().isEmpty() || dto.getOrderDate() == null || dto.getOrderDetails().isEmpty()) {
@@ -45,12 +47,10 @@ public class OrderServlet extends HttpServlet {
             }
 
             OrderBO orderBO = BOFactory.getInstance().getBO(BOTypes.ORDER);
-            orderBO.setConnection(connection);
-            if (orderBO.placeOrder(dto)){
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-            }else{
-                throw new HttpResponseException(500, "Failed to save the order", null);
-            }
+            orderBO.setEntityManager(em);
+            orderBO.placeOrder(dto);
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+
         }catch (SQLIntegrityConstraintViolationException exp){
             throw new HttpResponseException(400, "Duplicate entry", exp);
         } catch (JsonbException exp) {
