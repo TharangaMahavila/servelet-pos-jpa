@@ -8,6 +8,7 @@ import lk.ijse.dep.web.dto.CustomerDTO;
 import lk.ijse.dep.web.dto.ItemDTO;
 import lk.ijse.dep.web.entity.Item;
 
+import javax.persistence.EntityManager;
 import java.sql.Connection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,31 +16,31 @@ import java.util.stream.Collectors;
 public class ItemBOImpl implements ItemBO {
 
     private ItemDAO itemDAO;
-    private Connection connection;
+    private EntityManager entityManager;
 
     public ItemBOImpl() {
         itemDAO = DAOFactory.getInstance().getDAO(DAOTypes.ITEM);
     }
 
     @Override
-    public void setConnection(Connection connection) throws Exception {
-        this.connection = connection;
-        itemDAO.setConnection(connection);
+    public void setEntityManager(EntityManager entityManager) throws Exception {
+        this.entityManager = entityManager;
+        this.itemDAO.setEntityManager(entityManager);
     }
 
     @Override
-    public boolean saveItem(ItemDTO dto) throws Exception {
-        return itemDAO.save(new Item(dto.getCode(), dto.getDescription(), dto.getUnitPrice(), dto.getQtyOnHand()));
+    public void saveItem(ItemDTO dto) throws Exception {
+         itemDAO.save(new Item(dto.getCode(), dto.getDescription(), dto.getUnitPrice(), dto.getQtyOnHand()));
     }
 
     @Override
-    public boolean updateItem(ItemDTO dto) throws Exception {
-        return itemDAO.update(new Item(dto.getCode(), dto.getDescription(), dto.getUnitPrice(), dto.getQtyOnHand()));
+    public void updateItem(ItemDTO dto) throws Exception {
+         itemDAO.update(new Item(dto.getCode(), dto.getDescription(), dto.getUnitPrice(), dto.getQtyOnHand()));
     }
 
     @Override
-    public boolean deleteItem(String code) throws Exception {
-        return itemDAO.delete(code);
+    public void deleteItem(String code) throws Exception {
+         itemDAO.delete(code);
     }
 
     @Override

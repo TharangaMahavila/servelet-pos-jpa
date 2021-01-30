@@ -11,6 +11,7 @@ import lk.ijse.dep.web.entity.Item;
 import lk.ijse.dep.web.entity.Order;
 import lk.ijse.dep.web.entity.OrderDetail;
 
+import javax.persistence.EntityManager;
 import java.sql.Connection;
 import java.sql.Date;
 import java.util.List;
@@ -21,7 +22,7 @@ public class OrderBOImpl implements OrderBO {
     private OrderDAO orderDAO;
     private OrderDetailDAO orderDetailDAO;
     private ItemDAO itemDAO;
-    private Connection connection;
+    private EntityManager entityManager;
 
     public OrderBOImpl() {
         orderDAO = DAOFactory.getInstance().getDAO(DAOTypes.ORDER);
@@ -30,15 +31,15 @@ public class OrderBOImpl implements OrderBO {
     }
 
     @Override
-    public void setConnection(Connection connection) throws Exception {
-        this.connection = connection;
-        orderDAO.setConnection(connection);
-        orderDetailDAO.setConnection(connection);
-        itemDAO.setConnection(connection);
+    public void setEntityManager(EntityManager entityManager) throws Exception {
+        this.entityManager = entityManager;
+        this.orderDAO.setEntityManager(entityManager);
+        this.itemDAO.setEntityManager(entityManager);
+        this.orderDetailDAO.setEntityManager(entityManager);
     }
 
     @Override
-    public boolean placeOrder(OrderDTO dto) throws Exception {
+    public void placeOrder(OrderDTO dto) throws Exception {
         connection.setAutoCommit(false);
         try {
             boolean result = false;
