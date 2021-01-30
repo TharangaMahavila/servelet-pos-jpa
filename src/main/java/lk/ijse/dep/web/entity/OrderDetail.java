@@ -18,4 +18,10 @@ public class OrderDetail implements SuperEntity {
     private int qty;
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
+
+    public OrderDetail(String orderId, String itemCode, int qty, BigDecimal unitPrice) {
+        this.orderDetailPK = new OrderDetailPK(orderId,itemCode);
+        this.qty = qty;
+        this.unitPrice = unitPrice;
+    }
 }
