@@ -11,6 +11,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
+import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,7 +35,7 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         Jsonb jsonb = JsonbBuilder.create();
-        final BasicDataSource cp = (BasicDataSource) getServletContext().getAttribute("cp");
+        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
 
         try (Connection connection = cp.getConnection()) {
             OrderDTO dto = jsonb.fromJson(req.getReader(), OrderDTO.class);

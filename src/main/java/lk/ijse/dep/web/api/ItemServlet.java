@@ -11,6 +11,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
+import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,7 +34,7 @@ public class ItemServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final BasicDataSource cp = (BasicDataSource) getServletContext().getAttribute("cp");
+        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
 
         try (Connection connection = cp.getConnection()) {
 
@@ -59,7 +60,7 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 
-        final BasicDataSource cp = (BasicDataSource) getServletContext().getAttribute("cp");
+        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
 
         try (Connection connection = cp.getConnection()) {
 
@@ -93,7 +94,7 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Jsonb jsonb = JsonbBuilder.create();
-        final BasicDataSource cp = (BasicDataSource) getServletContext().getAttribute("cp");
+        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
 
         try (Connection connection = cp.getConnection()) {
             resp.setContentType("application/json");
@@ -109,7 +110,7 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         Jsonb jsonb = JsonbBuilder.create();
-        final BasicDataSource cp = (BasicDataSource) getServletContext().getAttribute("cp");
+        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
 
         try (Connection connection = cp.getConnection()) {
             ItemDTO dto = jsonb.fromJson(req.getReader(), ItemDTO.class);
